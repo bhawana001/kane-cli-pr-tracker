@@ -28,11 +28,22 @@
   .muted{color:var(--mut);}
   .foot{margin-top:18px;color:var(--mut);font-size:12.5px;}
   .dot{color:var(--acc);}
+  .tabs{display:flex;gap:6px;margin:0 0 22px;border-bottom:1px solid var(--line);}
+  .tab{appearance:none;background:none;border:none;color:var(--mut);font:inherit;font-weight:600;padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;}
+  .tab:hover{color:var(--txt);}
+  .tab.active{color:var(--txt);border-bottom-color:var(--acc);}
+  .panel{display:none;} .panel.active{display:block;}
+  .sec{white-space:nowrap;color:#c9d1d9;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Kane CLI <span class="dot">×</span> Open Source — PR Tracker</h1>
+  <h1>Kane CLI <span class="dot">×</span> Open Source — PR Trackers</h1>
+  <div class="tabs">
+    <button class="tab active" data-tab="test">Test PRs</button>
+    <button class="tab" data-tab="awesome">Awesome List PRs</button>
+  </div>
+  <section class="panel active" id="panel-test">
   <p class="sub">Automated critical-journey testing with Kane CLI across selected OSS projects, with evidence attached to each PR. Last updated: <span id="upd"></span></p>
   <div class="counts" id="counts"></div>
   <div class="legend">
@@ -47,7 +58,26 @@
     </tr></thead>
     <tbody id="rows"></tbody>
   </table>
-  <p class="foot">Maintained by an automated agent · evidence = Kane CLI sealed run / share link on each PR · approval rests with each project's maintainers.</p>
+  </section>
+
+  <section class="panel" id="panel-awesome">
+  <p class="sub">Getting Kane CLI listed in curated "awesome" lists. Each PR adds one accurate, on-format entry in the right section, following that list's own contributing rules. Approval rests with each list's maintainers.</p>
+  <div class="counts" id="counts-awesome"></div>
+  <div class="legend">
+    <span><span class="badge b-done">Done</span> PR raised</span>
+    <span><span class="badge b-prog">In Progress</span> queued / preparing</span>
+    <span><span class="badge b-block">Blocked</span> see notes</span>
+    <span><span class="badge b-skip">Skipped</span> list rules exclude us</span>
+  </div>
+  <table>
+    <thead><tr>
+      <th>#</th><th>Awesome List</th><th>Where Kane CLI fits</th><th>Pitch</th><th>PR</th><th>Status</th><th>Notes</th>
+    </tr></thead>
+    <tbody id="rows-awesome"></tbody>
+  </table>
+  </section>
+
+  <p class="foot">Two tracks · <b>Test PRs</b> = Kane CLI runs with evidence · <b>Awesome List PRs</b> = getting Kane CLI listed · each list's maintainers approve.</p>
 </div>
 <script>
 const DATA = [
@@ -98,6 +128,60 @@ document.getElementById('counts').innerHTML =
   `<span class="chip">Total: <b>${DATA.length}</b></span>`+
   Object.entries(c).map(([k,v])=>`<span class="chip">${k}: <b>${v}</b></span>`).join('');
 document.getElementById('upd').textContent = "2026-09-10";
+
+const AWESOME = [
+ {list:"awesome-cli-apps", url:"https://github.com/agarrharr/awesome-cli-apps", sec:"CLI apps", pitch:"AI browser testing from the terminal, plain-English objectives", pr:"", status:"Skipped", notes:"Rules forbid AI-generated PRs and require a free & open-source license + 20★ GitHub repo. Closed-source SaaS doesn't qualify."},
+ {list:"awesome-tuis", url:"https://github.com/rothgar/awesome-tuis", sec:"TUI tools", pitch:"Interactive TUI with a live step tree", pr:"", status:"Skipped", notes:"List is open-source, offline, account-less TUI apps; account-gated SaaS is a misfit."},
+ {list:"awesome-shell", url:"https://github.com/alebcay/awesome-shell", sec:"Testing / CLI utilities", pitch:"Pipeline-ready shell tool with clean exit codes", pr:"", status:"Blocked", notes:"Self-promo is allowed here, but every entry needs a GitHub repo with 50★. Our public link is the product site, not a starred repo."},
+ {list:"terminals-are-sexy", url:"https://github.com/k4m4/terminals-are-sexy", sec:"Tools / CLI", pitch:"Terminal-first testing experience", pr:"", status:"Blocked", notes:"No FOSS ban, but PRs merge only once the community endorses them; thin thematic fit (shells/prompts/frameworks)."},
+ {list:"awesome-playwright", url:"https://github.com/mxschmitt/awesome-playwright", sec:"AI & Agents", pitch:"Plain-English flows that export to native Playwright, with autohealing", pr:"", status:"In Progress", notes:"Batch 1 · PR prepared, preview posted, awaiting approval to open. List already accepts commercial SaaS."},
+ {list:"awesome-selenium", url:"https://github.com/christian-bromann/awesome-selenium", sec:"Tools", pitch:"Plain-English companion / alternative", pr:"", status:"In Progress", notes:"Batch 2 · verify contributing rules"},
+ {list:"awesome-regression-testing", url:"https://github.com/mojoaxel/awesome-regression-testing", sec:"Tools", pitch:"Every run seals screenshots + HAR evidence", pr:"", status:"In Progress", notes:"Batch 2 · verify contributing rules"},
+ {list:"awesome-software-quality", url:"https://github.com/ligurio/awesome-software-quality", sec:"Testing tools", pitch:"Requirements-to-verdict loop: PRD to test.md to evidence", pr:"", status:"In Progress", notes:"Batch 2 · verify contributing rules"},
+ {list:"awesome-a11y", url:"https://github.com/brunopulis/awesome-a11y", sec:"Testing tools", pitch:"Keyboard-only navigation smoke tests", pr:"", status:"In Progress", notes:"Batch 2 · verify contributing rules"},
+ {list:"awesome-nodejs", url:"https://github.com/sindresorhus/awesome-nodejs", sec:"Testing", pitch:"npm-installed testing tool with a bundled Node runtime", pr:"", status:"Skipped", notes:"sindresorhus lists explicitly bar authors adding their own tools — high spam-flag risk."},
+ {list:"awesome-javascript", url:"https://github.com/sorrycc/awesome-javascript", sec:"Testing Frameworks", pitch:"Selector-free browser test tool", pr:"", status:"In Progress", notes:"Batch 3 · verify Testing section accepts commercial"},
+ {list:"awesome-react", url:"https://github.com/enaqx/awesome-react", sec:"Testing", pitch:"Verify React UIs without selectors that break on refactor", pr:"", status:"In Progress", notes:"Batch 3 · verify contributing rules"},
+ {list:"awesome-vue", url:"https://github.com/vuejs/awesome-vue", sec:"Testing", pitch:"Selector-free UI verification for Vue apps", pr:"", status:"In Progress", notes:"Batch 3 · verify contributing rules"},
+ {list:"awesome-nextjs", url:"https://github.com/unicodeveloper/awesome-nextjs", sec:"Testing / recipes", pitch:"NextAuth and checkout testing recipes", pr:"", status:"In Progress", notes:"Batch 3 · verify contributing rules"},
+ {list:"awesome-ai-agents", url:"https://github.com/e2b-dev/awesome-ai-agents", sec:"Tools / agents", pitch:"Agent mode: NDJSON stream coding agents parse to self-correct", pr:"", status:"In Progress", notes:"Batch 3 · commercial-friendly"},
+ {list:"awesome-agents", url:"https://github.com/kyrolabs/awesome-agents", sec:"Tools", pitch:"Agent-native browser verification", pr:"", status:"In Progress", notes:"Batch 4 · commercial-friendly"},
+ {list:"awesome-ai-devtools", url:"https://github.com/jamesmurdza/awesome-ai-devtools", sec:"Testing / QA", pitch:"The verification layer for AI-generated code", pr:"", status:"In Progress", notes:"Batch 4 · commercial-friendly"},
+ {list:"awesome-code-ai", url:"https://github.com/sourcegraph/awesome-code-ai", sec:"Tools", pitch:"The agent builds it, Kane proves it works", pr:"", status:"In Progress", notes:"Batch 4 · commercial-friendly"},
+ {list:"awesome-ai-tools", url:"https://github.com/mahseema/awesome-ai-tools", sec:"Developer / testing tools", pitch:"Plain-English browser testing for AI dev workflows", pr:"", status:"In Progress", notes:"Batch 4 · commercial-friendly"},
+ {list:"awesome-llm-apps", url:"https://github.com/Shubhamsaboo/awesome-llm-apps", sec:"Tools / dev", pitch:"LLM-powered dev tool grounded in a real browser", pr:"", status:"In Progress", notes:"Batch 4 · commercial-friendly"},
+ {list:"awesome-python", url:"https://github.com/vinta/awesome-python", sec:"Testing", pitch:"Exports to native Python Playwright code", pr:"", status:"Skipped", notes:"vinta list bars self-promo / commercial tools — high spam-flag risk."},
+ {list:"awesome-npm", url:"https://github.com/sindresorhus/awesome-npm", sec:"Notable packages", pitch:"Notable npm CLI package", pr:"", status:"Skipped", notes:"sindresorhus lists explicitly bar authors adding their own tools — high spam-flag risk."},
+ {list:"awesome-flutter", url:"https://github.com/Solido/awesome-flutter", sec:"Testing", pitch:"Drives Flutter's pixel-painted UI where selector tools fail", pr:"", status:"In Progress", notes:"Batch 5 · verify contributing rules"},
+ {list:"awesome-react-native", url:"https://github.com/jondot/awesome-react-native", sec:"Testing", pitch:"Plain-English login/onboarding tests on simulator and emulator", pr:"", status:"In Progress", notes:"Batch 5 · verify contributing rules"},
+ {list:"awesome-claude-code", url:"https://github.com/hesreallyhim/awesome-claude-code", sec:"Skills / tooling", pitch:"Kane skill + agents.md for Claude Code", pr:"", status:"In Progress", notes:"Batch 5 · verify contributing rules"},
+ {list:"awesome-devops", url:"https://github.com/wmariuss/awesome-devops", sec:"Testing / CI tools", pitch:"Exit-code-clean CLI for pipelines", pr:"", status:"In Progress", notes:"Batch 6 · verify contributing rules"},
+ {list:"free-for-dev", url:"https://github.com/ripienaar/free-for-dev", sec:"Testing / free tiers", pitch:"$0 Starter plan, 100 credits, no card", pr:"", status:"In Progress", notes:"Batch 6 · genuine free-tier entry — strong fit"},
+ {list:"awesome-android", url:"https://github.com/JStumpp/awesome-android", sec:"Testing", pitch:"Plain-English tests on the Android Emulator", pr:"", status:"In Progress", notes:"Batch 6 · verify contributing rules"},
+ {list:"awesome-ios", url:"https://github.com/vsouza/awesome-ios", sec:"Testing", pitch:"iOS Simulator testing from the terminal", pr:"", status:"In Progress", notes:"Batch 6 · verify contributing rules"},
+ {list:"the-book-of-secret-knowledge", url:"https://github.com/trimstray/the-book-of-secret-knowledge", sec:"Dev tools", pitch:"Install one-liner under dev tools", pr:"", status:"In Progress", notes:"Batch 6 · verify contributing rules"},
+];
+const ra=document.getElementById('rows-awesome');
+AWESOME.forEach((d,i)=>{
+  const pr = d.pr ? `<a href="${d.pr}" target="_blank">PR ↗</a>` : '<span class="muted">—</span>';
+  ra.insertAdjacentHTML('beforeend',
+   `<tr><td class="muted">${i+1}</td>
+    <td class="repo"><a href="${d.url}" target="_blank">${d.list}</a></td>
+    <td class="sec">${d.sec}</td><td>${d.pitch}</td><td>${pr}</td>
+    <td><span class="badge ${cls[d.status]||'b-prog'}">${d.status}</span></td>
+    <td class="muted">${d.notes}</td></tr>`);
+});
+const ca={};AWESOME.forEach(d=>ca[d.status]=(ca[d.status]||0)+1);
+document.getElementById('counts-awesome').innerHTML =
+  `<span class="chip">Total: <b>${AWESOME.length}</b></span>`+
+  Object.entries(ca).map(([k,v])=>`<span class="chip">${k}: <b>${v}</b></span>`).join('');
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+}));
 </script>
 </body>
 </html>
