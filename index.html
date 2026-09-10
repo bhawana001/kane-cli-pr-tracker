@@ -24,6 +24,7 @@
   .b-done{background:#12351f;color:#3fb950;border:1px solid #2ea04326;}
   .b-prog{background:#3a2c12;color:#d29922;border:1px solid #bb800926;}
   .b-block{background:#3a1519;color:#f85149;border:1px solid #da363326;}
+  .b-skip{background:#26262b;color:#8b949e;border:1px solid #6e768133;}
   .muted{color:var(--mut);}
   .foot{margin-top:18px;color:var(--mut);font-size:12.5px;}
   .dot{color:var(--acc);}
@@ -38,6 +39,7 @@
     <span><span class="badge b-done">Done</span> PR raised</span>
     <span><span class="badge b-prog">In Progress</span> testing / preparing PR</span>
     <span><span class="badge b-block">Blocked</span> see notes</span>
+    <span><span class="badge b-skip">Skipped</span> login required, see notes</span>
   </div>
   <table>
     <thead><tr>
@@ -56,16 +58,16 @@ const DATA = [
  {repo:"cal.com", url:"https://github.com/calcom/cal.com", test:"Open a public booking page → pick an available date → verify bookable time slots", did:"Kane CLI run PASSED on cloud grid; test.md PR opened with LambdaTest evidence link", pr:"https://github.com/calcom/cal.diy/pull/30125", raised:"2026-09-10", status:"Done", notes:"Non-destructive (no booking confirmed). Evidence link in PR. Awaiting maintainer review."},
  {repo:"twenty", url:"https://github.com/twentyhq/twenty", test:"Sign in to the demo CRM → verify a Companies/People record list", did:"Attempted on cloud grid", pr:"", raised:"—", status:"Blocked", notes:"Demo CRM is a heavy SPA; the test client runs out of memory on this runner (OOM). Retry pending on a larger runner."},
  {repo:"medusa", url:"https://github.com/medusajs/medusa", test:"Storefront: open a product → add to cart", did:"Attempted on cloud grid", pr:"", raised:"—", status:"Blocked", notes:"Demo storefront products show 'Out of stock' so add-to-cart is unavailable (upstream demo data); storefront also OOMs this runner. Retry pending on a larger runner / in-stock demo."},
- {repo:"documenso", url:"https://github.com/documenso/documenso", test:"Create a document → add a signature field", did:"—", pr:"", raised:"—", status:"Blocked", notes:"Needs an authenticated demo account or a locally hosted instance to exercise a real flow; no open public demo to test safely."},
- {repo:"formbricks", url:"https://github.com/formbricks/formbricks", test:"Build a survey → submit a response", did:"—", pr:"", raised:"—", status:"Blocked", notes:"Needs an authenticated demo account or a locally hosted instance; no open public demo to test safely."},
- {repo:"nocodb", url:"https://github.com/nocodb/nocodb", test:"Create a table → add a row → filter it", did:"—", pr:"", raised:"—", status:"Blocked", notes:"Needs an authenticated demo/base or a locally hosted instance; public demo is a heavy SPA that OOMs this runner."},
- {repo:"appsmith", url:"https://github.com/appsmith/appsmith", test:"Build an app → add a widget → bind data", did:"—", pr:"", raised:"—", status:"Blocked", notes:"Requires login to the app builder; no open public demo to test a real flow safely."},
- {repo:"ToolJet", url:"https://github.com/ToolJet/ToolJet", test:"Build an app → add a component → bind data", did:"—", pr:"", raised:"—", status:"Blocked", notes:"Requires login to the app builder; no open public demo to test a real flow safely."},
- {repo:"n8n", url:"https://github.com/n8n-io/n8n", test:"Build a small workflow → execute it", did:"—", pr:"", raised:"—", status:"Blocked", notes:"Requires an authenticated cloud/self-hosted instance; no open public demo to test a real flow safely."},
- {repo:"Infisical", url:"https://github.com/Infisical/infisical", test:"Create a project → add + read back a secret", did:"—", pr:"", raised:"—", status:"Blocked", notes:"Requires an authenticated account (secrets manager); no open public demo to test safely."},
- {repo:"chatwoot", url:"https://github.com/chatwoot/chatwoot", test:"Open a conversation → send a reply", did:"—", pr:"", raised:"—", status:"Blocked", notes:"Requires an authenticated agent account; public demo endpoint was unreachable during testing."},
+ {repo:"documenso", url:"https://github.com/documenso/documenso", test:"Create a document → add a signature field", did:"—", pr:"", raised:"—", status:"Skipped", notes:"Skipped: requires a login to reach the document editor; no open public demo to test a real flow safely. Can revisit with a demo account."},
+ {repo:"formbricks", url:"https://github.com/formbricks/formbricks", test:"Build a survey → submit a response", did:"—", pr:"", raised:"—", status:"Skipped", notes:"Skipped: requires a login to the survey builder; no open public demo to test a real flow safely. Can revisit with a demo account."},
+ {repo:"nocodb", url:"https://github.com/nocodb/nocodb", test:"Create a table → add a row → filter it", did:"—", pr:"", raised:"—", status:"Skipped", notes:"Skipped: requires a login to reach a base; no open public demo to test a real flow safely. Can revisit with a demo account."},
+ {repo:"appsmith", url:"https://github.com/appsmith/appsmith", test:"Build an app → add a widget → bind data", did:"—", pr:"", raised:"—", status:"Skipped", notes:"Skipped: requires a login to the app builder; no open public demo to test a real flow safely. Can revisit with a demo account."},
+ {repo:"ToolJet", url:"https://github.com/ToolJet/ToolJet", test:"Build an app → add a component → bind data", did:"—", pr:"", raised:"—", status:"Skipped", notes:"Skipped: requires a login to the app builder; no open public demo to test a real flow safely. Can revisit with a demo account."},
+ {repo:"n8n", url:"https://github.com/n8n-io/n8n", test:"Build a small workflow → execute it", did:"—", pr:"", raised:"—", status:"Skipped", notes:"Skipped: requires an authenticated cloud/self-hosted instance; no open public demo to test a real flow safely. Can revisit with a demo account."},
+ {repo:"Infisical", url:"https://github.com/Infisical/infisical", test:"Create a project → add + read back a secret", did:"—", pr:"", raised:"—", status:"Skipped", notes:"Skipped: requires a login (secrets manager); no open public demo to test a real flow safely. Can revisit with a demo account."},
+ {repo:"chatwoot", url:"https://github.com/chatwoot/chatwoot", test:"Open a conversation → send a reply", did:"—", pr:"", raised:"—", status:"Skipped", notes:"Skipped: requires an authenticated agent account; public demo endpoint was unreachable during testing. Can revisit with a demo account."},
 ];
-const cls={"Done":"b-done","In Progress":"b-prog","Blocked":"b-block"};
+const cls={"Done":"b-done","In Progress":"b-prog","Blocked":"b-block","Skipped":"b-skip"};
 const rows=document.getElementById('rows');
 DATA.forEach((d,i)=>{
   const pr = d.pr ? `<a href="${d.pr}" target="_blank">PR ↗</a>` : '<span class="muted">—</span>';
